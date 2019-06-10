@@ -30,6 +30,10 @@ app.get('/listarCursos', (req, res) => {
     res.render('listarCursos');
 })
 
+app.get('/administrarCursos', (req, res) => {
+    res.render('administrarCursos');
+})
+
 app.post('/crearCurso', (req, res) => {
     cursosController.cargarCursos();
     let retorno = cursosController.crear(req.body);
