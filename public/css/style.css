@@ -1,0 +1,7 @@
+.mensaje{
+    display: block;
+}
+
+.mensaje:empty{
+    display: none;
+}

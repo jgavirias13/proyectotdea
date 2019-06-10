@@ -2,7 +2,7 @@
   "name": "proyectotdea",
   "version": "1.0.0",
   "description": "Proyecto del curso virtual de NodeJs del TDEA",
-  "main": "src/app.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/jgavirias13/proyectotdea/issues"
   },
-  "homepage": "https://github.com/jgavirias13/proyectotdea#readme"
+  "homepage": "https://github.com/jgavirias13/proyectotdea#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
+    "express": "^4.17.1",
+    "hbs": "^4.0.4",
+    "jquery": "^3.4.1",
+    "path": "^0.12.7",
+    "popper.js": "^1.15.0"
+  }
 }

@@ -1,0 +1,65 @@
+{{>header}}
+
+<div class="container">
+    <h2>Crear curso</h2>
+    
+    {{{mensajeError}}}
+    {{{mensajeExito}}}
+
+    <form action="/crearCurso" method="POST">
+        <div class="form-group row">
+            <label for="nombreCurso" class="col-sm-2 col-form-label">Nombre</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="nombreCurso" name="nombreCurso"
+                    placeholder="Ingresa el nombre del curso" required="true" value="{{nombreCurso}}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="idCurso" class="col-sm-2 col-form-label">Id</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="idCurso" name="idCurso"
+                    placeholder="Ingresa el ID unico del curso" required="true" value="{{idCurso}}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="descripcionCurso" class="col-sm-2 col-form-label">Descripcion</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="descripcionCurso" rows="3" name="descripcionCurso"
+                    placeholder="Descripción del curso" required="true">{{descripcionCurso}}</textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="valorCurso" class="col-sm-2 col-form-label">Valor</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" id="valorCurso" name="valorCurso"
+                    placeholder="Ingresa el valor del curso" required="true" value="{{valorCurso}}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="modalidadCurso" class="col-sm-2 col-form-label">Modalidad</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="modalidaCurso"
+                    name="modalidadCurso" placeholder="Modalidad del curso" value="{{modalidadCurso}}">
+                    <option></option>
+                    <option>Virtual</option>
+                    <option>Presencial</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="intensidadCurso" class="col-sm-2 col-form-label">Intensidad horaria</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="intensidadCurso" name="intensidadCurso"
+                    placeholder="Ingresa la intensidad horaria" value="{{intensidadCurso}}">
+            </div>
+        </div>
+        <div class="form-group row ">
+            <div class="col-sm-6">
+                <a href="/listarCursos" class="btn btn-secondary">Volver</a>
+                <button class="btn btn-primary">Crear curso</button>
+            </div>
+            
+        </div>
+    </form>
+</div>
+{{>footer}}
