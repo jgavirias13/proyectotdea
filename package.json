@@ -1,0 +1,23 @@
+{
+  "name": "proyectotdea",
+  "version": "1.0.0",
+  "description": "Proyecto del curso virtual de NodeJs del TDEA",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgavirias13/proyectotdea.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "TDEA"
+  ],
+  "author": "Juan Pablo Gaviria Salazar <jgavirias13@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jgavirias13/proyectotdea/issues"
+  },
+  "homepage": "https://github.com/jgavirias13/proyectotdea#readme"
+}
