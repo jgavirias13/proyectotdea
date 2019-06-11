@@ -4,4 +4,21 @@
     <h2>Cursos</h2>
 </div>
 
+<div class="container">
+    {{#each cursos}}
+        <div class="card">
+            <div class="card-header">
+                {{this.id}}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><a href="listarCurso?id={{this.id}}">{{this.nombre}}</a></h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{this.valor}}</h6>
+                <p class="card-text">{{this.descripcion}}</p>
+                <a href="#" class="btn btn-primary">Inscribir</a>
+                <footer class="blockquote-footer">{{this.modalidad}}</footer>
+            </div>
+        </div>
+    {{/each}}
+</div>
+
 {{>footer}}

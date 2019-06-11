@@ -44,7 +44,44 @@ const guardar = () => {
     })
 }
 
+const listar = () => {
+    let cursos = [...listaCursos];
+    cursos.forEach(curso => {
+        curso.valor = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP'
+        }).format(curso.valor);
+    });
+    return cursos;
+}
+
+const listarDisponibles = () => {
+    let cursosObj = listaCursos.filter(curso => curso.estado == 'disponible');
+    let cursos = [...cursosObj];
+    cursos.forEach(curso => {
+        curso.valor = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP'
+        }).format(curso.valor);
+    });
+    return cursos;
+}
+
+const listarCurso = (cursoDatos) => {
+    let id = cursoDatos.id;
+    let cursoOb = listaCursos.find(curso => curso.id == id);
+    let curso = {...cursoOb};
+    curso.valor = new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP'
+    }).format(curso.valor);
+    return curso;
+}
+
 module.exports = {
     crear,
-    cargarCursos
+    cargarCursos,
+    listar,
+    listarCurso,
+    listarDisponibles
 }

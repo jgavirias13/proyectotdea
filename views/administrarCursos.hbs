@@ -1,7 +1,35 @@
 {{>header}}
 
 <div class="container">
-    <h2>Cursos</h2>
+    <h2>Administrar cursos</h2>
+</div>
+
+<div class="container">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Modalidad</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each cursos}}
+                <tr>
+                    <th scope="row">
+                        <a href="/administrarCurso?id={{this.id}}">{{this.id}}</a>
+                    </th>
+                    <td>{{this.nombre}}</td>
+                    <td>{{this.valor}}</td>
+                    <td>{{this.modalidad}}</td>
+                    <td>{{this.estado}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </div>
 
 {{>footer}}
