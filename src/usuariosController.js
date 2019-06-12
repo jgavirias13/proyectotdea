@@ -34,7 +34,6 @@ const registrarUsuario = (datosUsuario) => {
 
 const iniciarSesion = (datosSesion) => {
     let email = datosSesion.email;
-    console.log(email);
     let password = datosSesion.password;
     let usuario = listaUsuarios.find(us => us.correo == email);
 
@@ -43,6 +42,10 @@ const iniciarSesion = (datosSesion) => {
     }else{
         return false;
     }
+}
+
+const listarUsuario = (documento) => {
+    return listaUsuarios.find(usuario => usuario.documento == documento);
 }
 
 const guardar = () => {
@@ -58,5 +61,6 @@ const guardar = () => {
 module.exports = {
     cargarUsuarios,
     registrarUsuario,
-    iniciarSesion
+    iniciarSesion,
+    listarUsuario
 };

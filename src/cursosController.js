@@ -78,10 +78,36 @@ const listarCurso = (cursoDatos) => {
     return curso;
 }
 
+const cerrarCurso = (idCurso) => {
+    let curso = listaCursos.find(curso => curso.id == idCurso);
+    if(curso){
+        curso.estado = 'cerrado';
+        guardar();
+        return curso;
+    }else{
+        return false;
+    }
+    
+}
+
+const abrirCurso = (idCurso) => {
+    let curso = listaCursos.find(curso => curso.id == idCurso);
+    if(curso){
+        curso.estado = 'disponible';
+        guardar();
+        return curso;
+    }else{
+        return false;
+    }
+    
+}
+
 module.exports = {
     crear,
     cargarCursos,
     listar,
     listarCurso,
-    listarDisponibles
+    listarDisponibles,
+    cerrarCurso,
+    abrirCurso
 }
