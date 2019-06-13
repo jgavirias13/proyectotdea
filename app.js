@@ -9,6 +9,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
 require('./src/helpers/administrarCurso');
+require('./src/helpers/administarUsuario');
 
 const app = express();
 const directorioPartials = path.join(__dirname, '/views/partials');
@@ -123,7 +124,9 @@ app.get('/crearCurso', (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
         if(usuario.rol == 'coordinador'){
-            res.render('crearCurso');
+            res.render('crearCurso', {
+                admin: true
+            });
         }else{
             res.redirect('/listarCursos');
         }
@@ -137,9 +140,36 @@ app.get('/listarCursos', (req, res) => {
     if(usuario && req.cookies.user_sid){
         cursosController.cargarCursos();
         let listaCursos = cursosController.listarDisponibles();
-        res.render('listarCursos', {
-            cursos: listaCursos
-        });
+        if(usuario.rol == 'coordinador'){
+            res.render('listarCursos', {
+                cursos: listaCursos,
+                admin: true
+            });
+        }else{
+            res.render('listarCursos', {
+                cursos: listaCursos
+            });
+        }
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.get('/listarInscripciones', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        inscripcionesController.cargarInscripciones();
+        let listaInscripciones = inscripcionesController.listarInscripciones(usuario.documento);
+        if(usuario.rol == 'coordinador'){
+            res.render('listarInscripciones', {
+                cursos: listaInscripciones,
+                admin: true
+            });
+        }else{
+            res.render('listarInscripciones', {
+                cursos: listaInscripciones
+            });
+        }
     }else{
         res.redirect('/');
     }
@@ -150,10 +180,16 @@ app.get('/listarCurso', (req, res) => {
     if(usuario && req.cookies.user_sid){
         cursosController.cargarCursos();
         let curso = cursosController.listarCurso(req.query);
-
-        res.render('listarCurso', {
-            curso: curso
-        });
+        if(usuario.curso == 'coordinador'){
+            res.render('listarCurso', {
+                curso: curso,
+                admin: true
+            });
+        }else{
+            res.render('listarCurso', {
+                curso: curso
+            });
+        }
     }else{
         res.redirect('/');
     }
@@ -166,7 +202,8 @@ app.get('/administrarCursos', (req, res) => {
             cursosController.cargarCursos();
             let listaCursos = cursosController.listar();
             res.render('administrarCursos', {
-                cursos: listaCursos
+                cursos: listaCursos,
+                admin: true
             });
         }else{
             res.redirect('/listarCursos');
@@ -186,7 +223,8 @@ app.get('/administrarCurso', (req, res) => {
             let inscritos = inscripcionesController.listarInscritos(curso.id);
             res.render('administrarCurso', {
                 curso: curso,
-                inscritos: inscritos
+                inscritos: inscritos,
+                admin:true
             });
         }else{
             res.redirect('/listarCursos');
@@ -209,14 +247,16 @@ app.get('/cerrarCurso', (req, res) => {
                 res.render('administrarCurso', {
                     mensajeExito: mensajeExito,
                     curso: curso,
-                    inscritos: inscritos
+                    inscritos: inscritos,
+                    admin: true
                 });
             }else{
                 let listaCursos = cursosController.listar();
                 let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
                 res.render('administrarCursos', {
                     cursos: listaCursos,
-                    mensajeError: mensajeError
+                    mensajeError: mensajeError,
+                    admin: true
                 });
             }
         }else{
@@ -240,14 +280,16 @@ app.get('/abrirCurso', (req, res) => {
                 res.render('administrarCurso', {
                     mensajeExito: mensajeExito,
                     curso: curso,
-                    inscritos: inscritos
+                    inscritos: inscritos,
+                    admin: true
                 });
             }else{
                 let listaCursos = cursosController.listar();
                 let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
                 res.render('administrarCursos', {
                     cursos: listaCursos,
-                    mensajeError: mensajeError
+                    mensajeError: mensajeError,
+                    admin: true
                 });
             }
         }else{
@@ -296,7 +338,8 @@ app.post('/crearCurso', (req, res) => {
                 descripcionCurso: req.body.descripcionCurso,
                 valorCurso: req.body.valorCurso,
                 modalidadCurso: req.body.modalidadCurso,
-                intensidadCurso: req.body.intensidadCurso
+                intensidadCurso: req.body.intensidadCurso,
+                admin: true
             });
         }else{
             res.redirect('/listarCursos');
@@ -326,11 +369,20 @@ app.get('/inscribirCurso', (req, res) => {
 
         cursosController.cargarCursos();
         let listaCursos = cursosController.listarDisponibles();
-        res.render('listarCursos', {
-            cursos: listaCursos,
-            mensajeError: mensajeError,
-            mensajeExito: mensajeExito
-        });
+        if(usuario.rol == 'coordinador'){
+            res.render('listarCursos', {
+                cursos: listaCursos,
+                mensajeError: mensajeError,
+                mensajeExito: mensajeExito,
+                admin: true
+            });
+        }else{
+            res.render('listarCursos', {
+                cursos: listaCursos,
+                mensajeError: mensajeError,
+                mensajeExito: mensajeExito
+            });
+        }
     }else{
         res.redirect('/');
     }
@@ -358,7 +410,8 @@ app.get('/borrarInscrito', (req, res) => {
                 curso: curso,
                 inscritos: inscritos,
                 mensajeError: mensajeError,
-                mensajeExito: mensajeExito
+                mensajeExito: mensajeExito,
+                admin: true
             });
 
         }else{
@@ -367,7 +420,203 @@ app.get('/borrarInscrito', (req, res) => {
     }else{
         res.redirect('/');
     }
+});
+
+app.get('/borrarInscripcion', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        let idCurso = req.query.curso;
+        let idUsuario = usuario.documento;
+        inscripcionesController.cargarInscripciones();
+        let mensajeError = '';
+        let mensajeExito = '';
+        let ret = inscripcionesController.eliminarInscripcion(idCurso, idUsuario);
+        if(ret == 0){
+            mensajeExito = crearExitoso('Se ha eliminado la inscripción');
+        }else{
+            mensajeError = crearError('No se ha podido eliminar, por favor intente de nuevo');
+        }
+        let listaInscripciones = inscripcionesController.listarInscripciones(usuario.documento);
+        console.log(listaInscripciones);
+        if(usuario.rol == 'coordinador'){
+            res.render('listarInscripciones', {
+                cursos: listaInscripciones,
+                mensajeError: mensajeError,
+                mensajeExito: mensajeExito,
+                admin: true
+            });
+        }else{
+            res.render('listarInscripciones', {
+                cursos: listaInscripciones,
+                mensajeError: mensajeError,
+                mensajeExito: mensajeExito
+            });
+        }
+    }else{
+        res.redirect('/');
+    }
+});
+
+
+app.get('/administrarUsuarios', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        if(usuario.rol == 'coordinador'){
+            usuariosController.cargarUsuarios();
+            let usuarios = usuariosController.listarUsuarios();
+            res.render('administrarUsuarios', {
+                usuarios: usuarios,
+                admin: true
+            })
+        }else{
+            res.redirect('/listarCursos');
+        }
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.get('/editarUsuario', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        if(usuario.rol == 'coordinador'){
+            usuariosController.cargarUsuarios();
+            let usuario = usuariosController.listarUsuario(req.query.usuario);
+            res.render('editarUsuario', {
+                usuario: usuario,
+                admin: true
+            })
+        }else{
+            res.redirect('/listarCursos');
+        }
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.post('/editarUsuario', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        if(usuario.rol == 'coordinador'){
+            usuariosController.cargarUsuarios();
+            resp = usuariosController.actualizarUsuario(req.body);
+            let listaUsuarios = usuariosController.listarUsuarios();
+            if(resp == 0){
+                let mensajeExito = crearExitoso('Usuario actualizado con exito');
+                res.render('administrarUsuarios', {
+                    usuarios: listaUsuarios,
+                    mensajeExito: mensajeExito,
+                    admin: true
+                })
+            }else{
+                let mensajeError = crearError('Ha ocurrido un error en tu solicitud. Vuelve a intentarlo');
+                res.render('administrarUsuarios', {
+                    usuarios: listaUsuarios,
+                    mensajeError: mensajeError,
+                    admin: true
+                })
+            }
+            
+        }else{
+            res.redirect('/listarCursos');
+        }
+    }else{
+        res.redirect('/');
+    }
 })
+
+app.get('/convertirAspirante', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        if(usuario.rol == 'coordinador'){
+            usuariosController.cargarUsuarios();
+            
+            let resp = usuariosController.convertirAspirante(req.query.usuario);
+            let listaUsuarios = usuariosController.listarUsuarios();
+            if(resp == 0){
+                let mensajeExito = crearExitoso('Rol cambiado con exito');
+                res.render('administrarUsuarios', {
+                    mensajeExito: mensajeExito,
+                    admin: true,
+                    usuarios: listaUsuarios
+                });
+            }else{
+                let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
+                res.render('administrarUsuarios', {
+                    mensajeError: mensajeError,
+                    admin: true,
+                    usuarios: listaUsuarios
+                });
+            }
+        }else{
+            res.redirect('/listarCursos');
+        }
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.get('/convertirCoordinador', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        if(usuario.rol == 'coordinador'){
+            usuariosController.cargarUsuarios();
+            
+            let resp = usuariosController.convertirCoordinador(req.query.usuario);
+            let listaUsuarios = usuariosController.listarUsuarios();
+            if(resp == 0){
+                let mensajeExito = crearExitoso('Rol cambiado con exito');
+                res.render('administrarUsuarios', {
+                    mensajeExito: mensajeExito,
+                    admin: true,
+                    usuarios: listaUsuarios
+                });
+            }else{
+                let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
+                res.render('administrarUsuarios', {
+                    mensajeError: mensajeError,
+                    admin: true,
+                    usuarios: listaUsuarios
+                });
+            }
+        }else{
+            res.redirect('/listarCursos');
+        }
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.get('/eliminarUsuario', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        if(usuario.rol == 'coordinador'){
+            usuariosController.cargarUsuarios();
+            
+            let resp = usuariosController.eliminarUsuario(req.query.usuario);
+            let listaUsuarios = usuariosController.listarUsuarios();
+            if(resp == 0){
+                let mensajeExito = crearExitoso('Usuario eliminado con exito');
+                res.render('administrarUsuarios', {
+                    mensajeExito: mensajeExito,
+                    admin: true,
+                    usuarios: listaUsuarios
+                });
+            }else{
+                let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
+                res.render('administrarUsuarios', {
+                    mensajeError: mensajeError,
+                    admin: true,
+                    usuarios: listaUsuarios
+                });
+            }
+        }else{
+            res.redirect('/listarCursos');
+        }
+    }else{
+        res.redirect('/');
+    }
+});
 
 app.listen(3000, () =>{
     console.log('Escuchando en el puerto 3000');

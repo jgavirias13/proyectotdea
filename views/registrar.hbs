@@ -1,55 +1,71 @@
-{{>header}}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" type="t  ext/css">
+    <title>Inscripciones TDEA</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Inscripciones TDEA</h1>
+            <hr>
+        </div>
+    </header>
 
-<div class="container">
-    {{{mensajeError}}}
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Registrate</h3>
-            <form action="/registrar" method="POST">
-                <div class="form-group row">
-                    <label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="nombre" name="nombre"
-                            placeholder="Tu nombre completo" required="true" value="{{nombre}}">
+    <div class="container">
+        {{{mensajeError}}}
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Registrate</h3>
+                <form action="/registrar" method="POST">
+                    <div class="form-group row">
+                        <label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                placeholder="Tu nombre completo" required="true" value="{{nombre}}">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="documento" class="col-sm-2 col-form-label">Documento</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="documento" name="documento"
-                            placeholder="Tu documento de identidad" required="true" value="{{documento}}">
+                    <div class="form-group row">
+                        <label for="documento" class="col-sm-2 col-form-label">Documento</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="documento" name="documento"
+                                placeholder="Tu documento de identidad" required="true" value="{{documento}}">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="correo" class="col-sm-2 col-form-label">Correo</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="correo" name="correo"
-                            placeholder="Tu correo electronico" required="true" value="{{correo}}">
+                    <div class="form-group row">
+                        <label for="correo" class="col-sm-2 col-form-label">Correo</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="correo" name="correo"
+                                placeholder="Tu correo electronico" required="true" value="{{correo}}">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="telefono" class="col-sm-2 col-form-label">Telefono</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="telefono" name="telefono"
-                            placeholder="Tu telefono celular" required="true" value="{{telefono}}">
+                    <div class="form-group row">
+                        <label for="telefono" class="col-sm-2 col-form-label">Telefono</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="telefono" name="telefono"
+                                placeholder="Tu telefono celular" required="true" value="{{telefono}}">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="password" class="col-sm-2 col-form-label">Contraseña</label>
-                    <div class="col-sm-10">
-                        <input type="password" class="form-control" id="password" name="password"
-                            placeholder="Tu contraseña" required="true" value="">
+                    <div class="form-group row">
+                        <label for="password" class="col-sm-2 col-form-label">Contraseña</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="Tu contraseña" required="true" value="">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Registar"/>
-                </div>
-                <div class="form-group">
-                    <a href="/">Volver</a>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Registar"/>
+                    </div>
+                    <div class="form-group">
+                        <a href="/">Volver</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 {{>footer}}

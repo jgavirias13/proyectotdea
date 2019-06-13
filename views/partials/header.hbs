@@ -10,9 +10,31 @@
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>Inscripciones TDEA</h1>
-            <a href="/logout">Cerrar sesion</a>
-            <hr>
-        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-success">
+            <a class="navbar-brand text-light" href="#">Inscripciones TDEA</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/listarCursos">Cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/listarInscripciones">Tus inscripciones</a>
+                </li>
+                {{#if admin}}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/administrarCursos">Administrar cursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/administrarUsuarios">Administrar Usuarios</a>
+                    </li>
+                {{/if}}
+                </ul>
+                <span class="navbar-text ">
+                    <a href="/logout" class="text-light">Cerrar sesion</a>
+                </span>
+            </div>
+        </nav>
     </header>

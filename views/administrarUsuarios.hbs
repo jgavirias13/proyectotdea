@@ -1,0 +1,44 @@
+{{>header}}
+
+<div class="container">
+    <h2>Administrar usuarios</h2>
+</div>
+
+<div class="container">
+
+    {{{mensajeError}}}
+    {{{mensajeExito}}}
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Documento</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Rol</th>
+                <th scope="col">Telefono</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each usuarios}}
+                <tr>
+                    <th scope="row">
+                        <a href="/editarUsuario?usuario={{this.documento}}">{{this.documento}}</a>
+                    </th>
+                    <td>{{this.nombre}}</td>
+                    <td>{{this.correo}}</td>
+                    <td>{{this.rol}}</td>
+                    <td>{{this.telefono}}</td>
+                    <td>{{{accionRol this}}}</td>
+                    <td>
+                        <a href="/eliminarUsuario?usuario={{this.documento}}">Eliminar</a>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{>footer}}

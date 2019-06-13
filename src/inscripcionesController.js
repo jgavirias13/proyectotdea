@@ -1,5 +1,6 @@
 const fs = require('fs');
 const usuariosController = require('./usuariosController');
+const cursosController = require('./cursosController');
 
 var listaInscripciones;
 const nombreArchivo = 'inscripciones.json';
@@ -41,11 +42,22 @@ const inscribir = (idUsuario, idCurso) => {
 const listarInscritos = (idCurso) => {
     let inscripciones = listaInscripciones.filter(inscripcion => inscripcion.idCurso == idCurso);
     let inscritos = [];
+    usuariosController.cargarUsuarios();
     inscripciones.forEach(inscripcion => {
-        usuariosController.cargarUsuarios();
         let usuario = usuariosController.listarUsuario(inscripcion.idUsuario);
         usuario.curso = idCurso;
         inscritos.push(usuario);
+    });
+    return inscritos;
+}
+
+const listarInscripciones = (idUsuario) => {
+    let inscripciones = listaInscripciones.filter(inscripcion => inscripcion.idUsuario == idUsuario);
+    let inscritos = [];
+    cursosController.cargarCursos();
+    inscripciones.forEach(inscripcion => {
+        let curso = cursosController.listarCurso({id: inscripcion.idCurso});
+        inscritos.push(curso);
     });
     return inscritos;
 }
@@ -66,5 +78,6 @@ module.exports = {
     cargarInscripciones,
     inscribir,
     listarInscritos,
-    eliminarInscripcion
+    eliminarInscripcion,
+    listarInscripciones
 }
