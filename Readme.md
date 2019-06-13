@@ -8,7 +8,7 @@ El proyecto consiste en la construcción de una página web para la adminsitraci
 
 ## Instrucciones para probar
 
-Para ver la página en funcionamiento se puede ingresar a [heroku](url)
+Para ver la página en funcionamiento se puede ingresar a [heroku](https://proyecto-tdea.herokuapp.com)
 
 Para correr local, clonar el repositorio y ejecutar los comandos:
 
