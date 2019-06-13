@@ -16,6 +16,8 @@ const directorioPartials = path.join(__dirname, '/views/partials');
 const directorioPublics = path.join(__dirname, '/public');
 const directorioModules = path.join(__dirname, '/node_modules');
 
+const port = process.env.PORT || 3000;
+
 function crearError(mensaje){
     return `<div class="alert alert-danger" role="alert">${mensaje}</div>`;
 }
@@ -618,6 +620,6 @@ app.get('/eliminarUsuario', (req, res) => {
     }
 });
 
-app.listen(3000, () =>{
-    console.log('Escuchando en el puerto 3000');
+app.listen(port, () =>{
+    console.log(`Escuchando en el puerto ${port}`);
 });
