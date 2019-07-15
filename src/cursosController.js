@@ -1,21 +1,9 @@
 const fs = require('fs');
+const Curso = require('./models/curso');
 
-var listaCursos;
-const nombreArchivo = 'cursos.json';
+const crear = (cursoBody, callback) => {
 
-const cargarCursos = () => {
-    let fileContent;
-    try{
-        fileContent = fs.readFileSync(nombreArchivo);
-        listaCursos = JSON.parse(fileContent);
-    }catch(err){
-        listaCursos = [];
-    }
-}
-
-const crear = (cursoBody) => {
-
-    let curso = {
+    let curso = new Curso({
         nombre: cursoBody.nombreCurso,
         id: cursoBody.idCurso,
         descripcion: cursoBody.descripcionCurso,
@@ -23,88 +11,73 @@ const crear = (cursoBody) => {
         modalidad: cursoBody.modalidadCurso,
         intensidad: cursoBody.intensidadCurso,
         estado: 'disponible'
-    };
+    });
 
-    if(!listaCursos.find(cursoLista => cursoLista.id == curso.id)){
-        listaCursos.push(curso);
-        guardar();
-        return 0;
-    }else{
-        return 1;
-    }
-    
+    curso.save((err, curso) => {
+        if(err){
+            callback(1);
+        }else{
+            callback(0);
+        }
+    });
 }
 
-const guardar = () => {
-    let datos = JSON.stringify(listaCursos);
-    fs.writeFile(nombreArchivo, datos, (err) => {
-        if(err){
-            console.log(err);
-        }
+const listar = (callback) => {
+    Curso.find((err, cursos) => {
+        cursos.forEach(curso => {
+            curso.valor = new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            }).format(curso.valor);
+        });
+        callback(cursos);
+    });
+}
+
+const listarDisponibles = (callback) => {
+    Curso.find({estado: 'disponible'}, (err, cursos) => {
+        cursos.forEach(curso => {
+            curso.valor = new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP'
+            }).format(curso.valor);
+        });
+        callback(cursos);
     })
 }
 
-const listar = () => {
-    let cursos = [...listaCursos];
-    cursos.forEach(curso => {
+const listarCurso = (cursoDatos, callback) => {
+    Curso.findOne({id: cursoDatos.id}, (err, curso) =>{
         curso.valor = new Intl.NumberFormat('es-CO', {
             style: 'currency',
             currency: 'COP'
         }).format(curso.valor);
+        callback(curso);
     });
-    return cursos;
 }
 
-const listarDisponibles = () => {
-    let cursosObj = listaCursos.filter(curso => curso.estado == 'disponible');
-    let cursos = [...cursosObj];
-    cursos.forEach(curso => {
-        curso.valor = new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP'
-        }).format(curso.valor);
+const cerrarCurso = (idCurso, callback) => {
+    Curso.findOneAndUpdate({id: idCurso}, {estado: 'cerrado'}, {new: true}, (err, curso) => {
+        if(err){
+            callback(false);
+        }else{
+            callback(curso);
+        }
     });
-    return cursos;
 }
 
-const listarCurso = (cursoDatos) => {
-    let id = cursoDatos.id;
-    let cursoOb = listaCursos.find(curso => curso.id == id);
-    let curso = {...cursoOb};
-    curso.valor = new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP'
-    }).format(curso.valor);
-    return curso;
-}
-
-const cerrarCurso = (idCurso) => {
-    let curso = listaCursos.find(curso => curso.id == idCurso);
-    if(curso){
-        curso.estado = 'cerrado';
-        guardar();
-        return curso;
-    }else{
-        return false;
-    }
-    
-}
-
-const abrirCurso = (idCurso) => {
-    let curso = listaCursos.find(curso => curso.id == idCurso);
-    if(curso){
-        curso.estado = 'disponible';
-        guardar();
-        return curso;
-    }else{
-        return false;
-    }
-    
+const abrirCurso = (idCurso, callback) => {
+    Curso.findOneAndUpdate({id: idCurso}, {estado: 'disponible'}, {new: true}, (err, curso) => {
+        if(err){
+            callback(false);
+        }else{
+            callback(curso);
+        }
+    });
 }
 
 module.exports = {
     crear,
-    cargarCursos,
     listar,
     listarCurso,
     listarDisponibles,

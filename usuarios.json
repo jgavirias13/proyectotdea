@@ -1,1 +1,1 @@
-[{"nombre":"admin","documento":"12345","correo":"admin@example.com","telefono":"1234","rol":"coordinador","password":"1234"}]
+[{"nombre":"admin","documento":"12345","correo":"admin@example.com","telefono":"1234","rol":"coordinador","password":"1234"},{"_id":"5d2beb6ee95e7900af390022","nombre":"Juan Pablo Gaviria","documento":"1037649970","correo":"jgavirias13@gmail.com","telefono":"3164680784","rol":"aspirante","password":"jpGS1037649970"}]

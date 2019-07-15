@@ -1,117 +1,94 @@
 const fs = require('fs');
+const Usuario = require('./models/usuario');
 
-var listaUsuarios;
-const nombreArchivo = 'usuarios.json';
-
-const cargarUsuarios = () => {
-    let fileContent;
-    try{
-        fileContent = fs.readFileSync(nombreArchivo);
-        listaUsuarios = JSON.parse(fileContent);
-    }catch(err){
-        listaUsuarios = [];
-    }
-}
-
-const registrarUsuario = (datosUsuario) => {
-    let usuario = {
+const registrarUsuario = (datosUsuario, callback) => {
+    let usuario = new Usuario({
         nombre: datosUsuario.nombre,
         documento: datosUsuario.documento,
         correo: datosUsuario.correo,
         telefono: datosUsuario.telefono,
         rol: 'aspirante',
         password: datosUsuario.password
-    }
+    })
 
-    if(!listaUsuarios.find(us => (us.documento == usuario.documento) || (us.correo == usuario.correo))){
-        listaUsuarios.push(usuario);
-        guardar();
-        return true;
-    }else{
-        return false;
-    }
-}
-
-const iniciarSesion = (datosSesion) => {
-    let email = datosSesion.email;
-    let password = datosSesion.password;
-    let usuario = listaUsuarios.find(us => us.correo == email);
-
-    if(usuario && usuario.password == password){
-        return usuario;
-    }else{
-        return false;
-    }
-}
-
-const listarUsuario = (documento) => {
-    return listaUsuarios.find(usuario => usuario.documento == documento);
-}
-
-const listarUsuarios = () => {
-    return listaUsuarios;
-}
-
-const convertirCoordinador = (idUsuario) => {
-    let usuario = listaUsuarios.find(usuario => usuario.documento == idUsuario);
-    if(usuario){
-        usuario.rol = 'coordinador';
-        guardar();
-        return 0;
-    }else{
-        return 1;
-    }
-}
-
-const convertirAspirante = (idUsuario) => {
-    let usuario = listaUsuarios.find(usuario => usuario.documento == idUsuario);
-    if(usuario){
-        usuario.rol = 'aspirante';
-        guardar();
-        return 0;
-    }else{
-        return 1;
-    }
-}
-
-const eliminarUsuario = (idUsuario) => {
-    let nuevoListado = listaUsuarios.filter( usuario => usuario.documento != idUsuario);
-    if(nuevoListado.length != listaUsuarios.length){
-        listaUsuarios = nuevoListado;
-        guardar();
-        return 0;
-    }else{
-        return 1;
-    }
-}
-
-const guardar = () => {
-    let datos = JSON.stringify(listaUsuarios);
-    fs.writeFile(nombreArchivo, datos, (err) => {
-        if(err){
-            console.log(err);
+    usuario.save((err) => {
+        if (err){
+            callback(false);
+        }else{
+            callback(true);
         }
     })
 }
 
-const actualizarUsuario = (datosUsuario) => {
-    let usuario = listaUsuarios.find( usuario => usuario.documento == datosUsuario.documento);
-    if(usuario){
-        usuario.nombre = datosUsuario.nombre;
-        usuario.correo = datosUsuario.correo;
-        usuario.telefono = datosUsuario.telefono;
-
-        guardar();
-
-        return 0;
-    }else{
-        return 1;
-    }
+const iniciarSesion = (datosSesion, callback) => {
+    let email = datosSesion.email;
+    let password = datosSesion.password;
+    Usuario.findOne({correo: email}, (err, usuario) =>{
+        if(usuario && usuario.password == password){
+            callback(usuario);
+        }else{
+            callback(false);
+        }
+    });
 }
 
+const listarUsuario = (documento, callback) => {
+    Usuario.findOne({documento: documento}, (err, usuario) => {
+        callback(usuario);
+    });
+}
+
+const listarUsuarios = (callback) => {
+    Usuario.find((err, usuarios) => {
+        callback(usuarios);
+    });
+}
+
+const convertirCoordinador = (idUsuario, callback) => {
+    Usuario.findOneAndUpdate({documento: idUsuario}, {rol: 'coordinador'}, {new: true}, (err, usuario) => {
+        if(err){
+            callback(1);
+        }else{
+            callback(0);
+        }
+    });
+}
+
+const convertirAspirante = (idUsuario, callback) => {
+    Usuario.findOneAndUpdate({documento: idUsuario}, {rol: 'aspirante'}, {new: true}, (err, usuario) => {
+        if(err){
+            callback(1);
+        }else{
+            callback(0);
+        }
+    });
+}
+
+const eliminarUsuario = (idUsuario, callback) => {
+    Usuario.findOneAndDelete({documento: idUsuario}, (err, usuario) => {
+        if(err){
+            callback(1);
+        }else{
+            callback(0);
+        }
+    })
+}
+
+const actualizarUsuario = (datosUsuario, callback) => {
+    Usuario.findOneAndUpdate({documento: datosUsuario.documento}, {new: true}, {
+        nombre: datosUsuario.nombre,
+        correo: datosUsuario.correo,
+        telefono: datosUsuario.telefono
+    }, (err, usuario) => {
+        if(err){
+            callback(1);
+        }else{
+            callback(0);
+        }
+    });
+}
 
 module.exports = {
-    cargarUsuarios,
     registrarUsuario,
     iniciarSesion,
     listarUsuario,
