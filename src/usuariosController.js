@@ -1,22 +1,30 @@
 const fs = require('fs');
 const Usuario = require('./models/usuario');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const registrarUsuario = (datosUsuario, callback) => {
-    let usuario = new Usuario({
-        nombre: datosUsuario.nombre,
-        documento: datosUsuario.documento,
-        correo: datosUsuario.correo,
-        telefono: datosUsuario.telefono,
-        rol: 'aspirante',
-        password: datosUsuario.password
-    })
-
-    usuario.save((err) => {
-        if (err){
-            callback(false);
-        }else{
-            callback(true);
+    bcrypt.hash(datosUsuario.password, saltRounds, (err, hash) => {
+        if(err){
+            return callback(false);
         }
+
+        let usuario = new Usuario({
+            nombre: datosUsuario.nombre,
+            documento: datosUsuario.documento,
+            correo: datosUsuario.correo,
+            telefono: datosUsuario.telefono,
+            rol: 'aspirante',
+            password: hash
+        })
+    
+        usuario.save((err) => {
+            if (err){
+                callback(false);
+            }else{
+                callback(true);
+            }
+        })
     })
 }
 
@@ -24,11 +32,13 @@ const iniciarSesion = (datosSesion, callback) => {
     let email = datosSesion.email;
     let password = datosSesion.password;
     Usuario.findOne({correo: email}, (err, usuario) =>{
-        if(usuario && usuario.password == password){
-            callback(usuario);
-        }else{
-            callback(false);
-        }
+        bcrypt.compare(password, usuario.password, (err, res) => {
+            if(res == true){
+                callback(usuario);
+            }else{
+                callback(false);
+            }
+        });
     });
 }
 
