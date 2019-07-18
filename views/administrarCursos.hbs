@@ -32,7 +32,7 @@
                         <a href="/administrarCurso?id={{this.id}}">{{this.id}}</a>
                     </th>
                     <td>{{this.nombre}}</td>
-                    <td>{{this.valor}}</td>
+                    <td>{{formatNumber this.valor style="currency" currency="USD"}}</td>
                     <td>{{this.modalidad}}</td>
                     <td>{{this.estado}}</td>
                 </tr>

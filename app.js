@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const hbs = require('hbs');
+const HandlebarsIntl = require('handlebars-intl');
 const bodyParser = require('body-parser');
 const cursosController =require('./src/cursosController');
 const usuariosController = require('./src/usuariosController');
@@ -8,6 +9,8 @@ const inscripcionesController = require('./src/inscripcionesController');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+
+HandlebarsIntl.registerWith(hbs);
 
 require('./src/helpers/administrarCurso');
 require('./src/helpers/administarUsuario');
