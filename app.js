@@ -44,6 +44,20 @@ app.use(session({
 app.use((req, res, next) => {
     if(req.cookies.user_sid && !req.session.usuario){
         res.clearCookie('user_sid');
+    }else if(req.cookies.user_sid && req.session.usuario){
+        res.locals.session = true;
+        res.locals.nombre = req.session.usuario.correo;
+        switch(req.session.usuario.rol){
+            case "aspirante":
+                res.locals.aspirante = true;
+                break;
+            case "coordinador":
+                res.locals.coordinador = true;
+                break;
+            case "docente":
+                res.locals.docente = true;
+                break;
+        }
     }
     next();
 })
@@ -127,9 +141,7 @@ app.get('/crearCurso', (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
         if(usuario.rol == 'coordinador'){
-            res.render('crearCurso', {
-                admin: true
-            });
+            res.render('crearCurso');
         }else{
             res.redirect('/listarCursos');
         }
@@ -144,8 +156,7 @@ app.get('/listarCursos', (req, res) => {
         cursosController.listarDisponibles((listaCursos) => {
             if(usuario.rol == 'coordinador'){
                 res.render('listarCursos', {
-                    cursos: listaCursos,
-                    admin: true
+                    cursos: listaCursos
                 });
             }else{
                 res.render('listarCursos', {
@@ -164,8 +175,7 @@ app.get('/listarInscripciones', (req, res) => {
         inscripcionesController.listarInscripciones(usuario.documento, (listaInscripciones) => {
             if(usuario.rol == 'coordinador'){
                 res.render('listarInscripciones', {
-                    cursos: listaInscripciones,
-                    admin: true
+                    cursos: listaInscripciones
                 });
             }else{
                 res.render('listarInscripciones', {
@@ -184,8 +194,7 @@ app.get('/listarCurso', (req, res) => {
         cursosController.listarCurso(req.query, (curso) => {
             if(usuario.curso == 'coordinador'){
                 res.render('listarCurso', {
-                    curso: curso,
-                    admin: true
+                    curso: curso
                 });
             }else{
                 res.render('listarCurso', {
@@ -204,8 +213,7 @@ app.get('/administrarCursos', (req, res) => {
         if(usuario.rol == 'coordinador'){
             cursosController.listar((listaCursos) => {
                 res.render('administrarCursos', {
-                    cursos: listaCursos,
-                    admin: true
+                    cursos: listaCursos
                 });
             });
         }else{
@@ -224,8 +232,7 @@ app.get('/administrarCurso', (req, res) => {
                 inscripcionesController.listarInscritos(curso.id, (inscritos) => {
                     res.render('administrarCurso', {
                         curso: curso,
-                        inscritos: inscritos,
-                        admin:true
+                        inscritos: inscritos
                     });
                 });
             });
@@ -248,8 +255,7 @@ app.get('/cerrarCurso', (req, res) => {
                         res.render('administrarCurso', {
                             mensajeExito: mensajeExito,
                             curso: curso,
-                            inscritos: inscritos,
-                            admin: true
+                            inscritos: inscritos
                         });
                     });
                 }else{
@@ -257,8 +263,7 @@ app.get('/cerrarCurso', (req, res) => {
                         let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
                         res.render('administrarCursos', {
                             cursos: listaCursos,
-                            mensajeError: mensajeError,
-                            admin: true
+                            mensajeError: mensajeError
                         });
                     });
                 } 
@@ -282,8 +287,7 @@ app.get('/abrirCurso', (req, res) => {
                         res.render('administrarCurso', {
                             mensajeExito: mensajeExito,
                             curso: curso,
-                            inscritos: inscritos,
-                            admin: true
+                            inscritos: inscritos
                         });
                     });
                 }else{
@@ -291,8 +295,7 @@ app.get('/abrirCurso', (req, res) => {
                         let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
                         res.render('administrarCursos', {
                             cursos: listaCursos,
-                            mensajeError: mensajeError,
-                            admin: true
+                            mensajeError: mensajeError
                         });
                     });
                 }
@@ -341,8 +344,7 @@ app.post('/crearCurso', (req, res) => {
                     descripcionCurso: req.body.descripcionCurso,
                     valorCurso: req.body.valorCurso,
                     modalidadCurso: req.body.modalidadCurso,
-                    intensidadCurso: req.body.intensidadCurso,
-                    admin: true
+                    intensidadCurso: req.body.intensidadCurso
                 });
             });
         }else{
@@ -362,20 +364,11 @@ app.get('/inscribirCurso', (req, res) => {
 
         renderDisponibles = () => {
             cursosController.listarDisponibles((listaCursos) => {
-                if(usuario.rol == 'coordinador'){
-                    res.render('listarCursos', {
-                        cursos: listaCursos,
-                        mensajeError: mensajeError,
-                        mensajeExito: mensajeExito,
-                        admin: true
-                    });
-                }else{
-                    res.render('listarCursos', {
-                        cursos: listaCursos,
-                        mensajeError: mensajeError,
-                        mensajeExito: mensajeExito
-                    });
-                }
+                res.render('listarCursos', {
+                    cursos: listaCursos,
+                    mensajeError: mensajeError,
+                    mensajeExito: mensajeExito
+                });
             });
         }
 
@@ -418,8 +411,7 @@ app.get('/borrarInscrito', (req, res) => {
                         curso: curso,
                         inscritos: inscritos,
                         mensajeError: mensajeError,
-                        mensajeExito: mensajeExito,
-                        admin: true
+                        mensajeExito: mensajeExito
                     });
                 });
             });
@@ -449,8 +441,7 @@ app.get('/borrarInscripcion', (req, res) => {
                     res.render('listarInscripciones', {
                         cursos: listaInscripciones,
                         mensajeError: mensajeError,
-                        mensajeExito: mensajeExito,
-                        admin: true
+                        mensajeExito: mensajeExito
                     });
                 }else{
                     res.render('listarInscripciones', {
@@ -473,8 +464,7 @@ app.get('/administrarUsuarios', (req, res) => {
         if(usuario.rol == 'coordinador'){
             usuariosController.listarUsuarios((usuarios) => {
                 res.render('administrarUsuarios', {
-                    usuarios: usuarios,
-                    admin: true
+                    usuarios: usuarios
                 })
             });
         }else{
@@ -491,8 +481,7 @@ app.get('/editarUsuario', (req, res) => {
         if(usuario.rol == 'coordinador'){
             usuariosController.listarUsuario(req.query.usuario, (usuario) => {
                 res.render('editarUsuario', {
-                    usuario: usuario,
-                    admin: true
+                    usuario: usuario
                 })
             });
         }else{
@@ -513,15 +502,13 @@ app.post('/editarUsuario', (req, res) => {
                         let mensajeExito = crearExitoso('Usuario actualizado con exito');
                         res.render('administrarUsuarios', {
                             usuarios: listaUsuarios,
-                            mensajeExito: mensajeExito,
-                            admin: true
+                            mensajeExito: mensajeExito
                         })
                     }else{
                         let mensajeError = crearError('Ha ocurrido un error en tu solicitud. Vuelve a intentarlo');
                         res.render('administrarUsuarios', {
                             usuarios: listaUsuarios,
-                            mensajeError: mensajeError,
-                            admin: true
+                            mensajeError: mensajeError
                         })
                     }
                 });
@@ -544,14 +531,12 @@ app.get('/convertirAspirante', (req, res) => {
                         let mensajeExito = crearExitoso('Rol cambiado con exito');
                         res.render('administrarUsuarios', {
                             mensajeExito: mensajeExito,
-                            admin: true,
                             usuarios: listaUsuarios
                         });
                     }else{
                         let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
                         res.render('administrarUsuarios', {
                             mensajeError: mensajeError,
-                            admin: true,
                             usuarios: listaUsuarios
                         });
                     }
@@ -575,14 +560,12 @@ app.get('/convertirCoordinador', (req, res) => {
                         let mensajeExito = crearExitoso('Rol cambiado con exito');
                         res.render('administrarUsuarios', {
                             mensajeExito: mensajeExito,
-                            admin: true,
                             usuarios: listaUsuarios
                         });
                     }else{
                         let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
                         res.render('administrarUsuarios', {
                             mensajeError: mensajeError,
-                            admin: true,
                             usuarios: listaUsuarios
                         });
                     }
@@ -606,14 +589,12 @@ app.get('/eliminarUsuario', (req, res) => {
                         let mensajeExito = crearExitoso('Usuario eliminado con exito');
                         res.render('administrarUsuarios', {
                             mensajeExito: mensajeExito,
-                            admin: true,
                             usuarios: listaUsuarios
                         });
                     }else{
                         let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
                         res.render('administrarUsuarios', {
                             mensajeError: mensajeError,
-                            admin: true,
                             usuarios: listaUsuarios
                         });
                     }

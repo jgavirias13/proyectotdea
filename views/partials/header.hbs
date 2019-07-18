@@ -17,13 +17,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="/listarCursos">Cursos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="/listarInscripciones">Tus inscripciones</a>
-                </li>
-                {{#if admin}}
+                {{#if aspirante}}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/listarCursos">Cursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/listarInscripciones">Tus inscripciones</a>
+                    </li>
+                {{/if}}
+                {{#if coordinador}}
                     <li class="nav-item">
                         <a class="nav-link text-light" href="/administrarCursos">Administrar cursos</a>
                     </li>
@@ -33,7 +35,7 @@
                 {{/if}}
                 </ul>
                 <span class="navbar-text ">
-                    <a href="/logout" class="text-light">Cerrar sesion</a>
+                    <a href="/logout" class="text-light">Cerrar sesion ({{nombre}})</a>
                 </span>
             </div>
         </nav>
