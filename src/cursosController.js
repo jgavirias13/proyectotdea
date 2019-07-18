@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Curso = require('./models/curso');
+const Usuario = require('./models/usuario');
 
 const crear = (cursoBody, callback) => {
 
@@ -24,56 +25,48 @@ const crear = (cursoBody, callback) => {
 
 const listar = (callback) => {
     Curso.find((err, cursos) => {
-        cursos.forEach(curso => {
-            curso.valor = new Intl.NumberFormat('es-CO', {
-                style: 'currency',
-                currency: 'COP'
-            }).format(curso.valor);
-        });
         callback(cursos);
     });
 }
 
 const listarDisponibles = (callback) => {
     Curso.find({estado: 'disponible'}, (err, cursos) => {
-        cursos.forEach(curso => {
-            curso.valor = new Intl.NumberFormat('es-CO', {
-                style: 'currency',
-                currency: 'COP'
-            }).format(curso.valor);
-        });
         callback(cursos);
     })
 }
 
 const listarCurso = (cursoDatos, callback) => {
-    Curso.findOne({id: cursoDatos.id}, (err, curso) =>{
-        curso.valor = new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP'
-        }).format(curso.valor);
+    Curso.findOne({id: cursoDatos.id}).populate('docente').exec((err, curso) => {
         callback(curso);
     });
 }
 
-const cerrarCurso = (idCurso, callback) => {
-    Curso.findOneAndUpdate({id: idCurso}, {estado: 'cerrado'}, {new: true}, (err, curso) => {
+const cerrarCurso = (idCurso, idDocente, callback) => {
+    console.log(idDocente);
+    Usuario.findById(idDocente, (err, doc) => {
         if(err){
-            callback(false);
-        }else{
-            callback(curso);
+            return callback(false);
         }
+        Curso.findOneAndUpdate({id: idCurso}, {estado: 'cerrado', docente: doc}, {new: true})
+            .populate('docente').exec((err, curso) => {
+                if(err){
+                    callback(false);
+                }else{
+                    callback(curso);
+                }
+            });
     });
 }
 
 const abrirCurso = (idCurso, callback) => {
-    Curso.findOneAndUpdate({id: idCurso}, {estado: 'disponible'}, {new: true}, (err, curso) => {
-        if(err){
-            callback(false);
-        }else{
-            callback(curso);
-        }
-    });
+    Curso.findOneAndUpdate({id: idCurso}, {estado: 'disponible'}, {new: true})
+        .populate('docente').exec((err, curso) => {
+            if(err){
+                callback(false);
+            }else{
+                callback(curso);
+            }
+        });
 }
 
 module.exports = {

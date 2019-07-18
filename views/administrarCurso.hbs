@@ -29,6 +29,12 @@
             Estado:
             <small class="text-muted">{{curso.estado}}</small>
         </h5>
+        {{#if curso.docente}}
+            <h5>
+                Docente:
+                <small class="text-muted">{{curso.docente.nombre}}</small>
+            </h5>
+        {{/if}}
     </p>
     
     <h2>
@@ -73,4 +79,6 @@
         </div>
     </div>
 </div>
+
+{{>cerrarCurso}}
 {{>footer}}

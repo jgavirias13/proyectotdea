@@ -79,11 +79,22 @@ const actualizarUsuario = (datosUsuario, callback) => {
     });
 }
 
+const obtenerDocentes = (callback) => {
+    Usuario.find({rol: 'docente'}, (err, usuarios) => {
+        if(err){
+            callback(false);
+        }else{
+            callback(usuarios);
+        }
+    });
+}
+
 module.exports = {
     registrarUsuario,
     iniciarSesion,
     listarUsuario,
     listarUsuarios,
     eliminarUsuario,
-    actualizarUsuario
+    actualizarUsuario,
+    obtenerDocentes
 };

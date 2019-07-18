@@ -69,6 +69,7 @@ app.use('/css', express.static(directorioModules + '/bootstrap/dist/css'));
 app.use('/js', express.static(directorioModules + '/jquery/dist/'));
 app.use('/js', express.static(directorioModules + '/popper.js/dist/'));
 app.use('/js', express.static(directorioModules + '/bootstrap/dist/js'));
+app.use('/js', express.static(directorioModules + '/bootbox/dist/'));
 app.set('view engine', 'hbs');
 
 var sessionChecker = (req, res, next) => {
@@ -235,9 +236,12 @@ app.get('/administrarCurso', (req, res) => {
         if(usuario.rol == 'coordinador'){
             cursosController.listarCurso(req.query, (curso) => {
                 inscripcionesController.listarInscritos(curso.id, (inscritos) => {
-                    res.render('administrarCurso', {
-                        curso: curso,
-                        inscritos: inscritos
+                    usuariosController.obtenerDocentes((docentes) => {
+                        res.render('administrarCurso', {
+                            curso: curso,
+                            inscritos: inscritos,
+                            docentes: docentes
+                        });
                     });
                 });
             });
@@ -253,14 +257,17 @@ app.get('/cerrarCurso', (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
         if(usuario.rol == 'coordinador'){
-            cursosController.cerrarCurso(req.query.curso, (curso) => {
+            cursosController.cerrarCurso(req.query.curso, req.query.docente, (curso) => {
                 if(curso){
                     inscripcionesController.listarInscritos(curso.id, (inscritos) => {
                         let mensajeExito = crearExitoso('Curso cerrado con exito');
-                        res.render('administrarCurso', {
-                            mensajeExito: mensajeExito,
-                            curso: curso,
-                            inscritos: inscritos
+                        usuariosController.obtenerDocentes((docentes) => {
+                            res.render('administrarCurso', {
+                                mensajeExito: mensajeExito,
+                                curso: curso,
+                                inscritos: inscritos,
+                                docentes: docentes
+                            });
                         });
                     });
                 }else{
@@ -289,10 +296,13 @@ app.get('/abrirCurso', (req, res) => {
                 if(curso){
                     inscripcionesController.listarInscritos(curso.id, (inscritos) => {
                         let mensajeExito = crearExitoso('Curso abierto con exito');
-                        res.render('administrarCurso', {
-                            mensajeExito: mensajeExito,
-                            curso: curso,
-                            inscritos: inscritos
+                        usuariosController.obtenerDocentes((docentes) => {
+                            res.render('administrarCurso', {
+                                mensajeExito: mensajeExito,
+                                curso: curso,
+                                inscritos: inscritos,
+                                docentes: docentes
+                            });
                         });
                     });
                 }else{
@@ -412,11 +422,14 @@ app.get('/borrarInscrito', (req, res) => {
                 let cursoId = {id: idCurso};
                 cursosController.listarCurso(cursoId, (curso) => {
                     let inscritos = inscripcionesController.listarInscritos(curso.id);
-                    res.render('administrarCurso', {
-                        curso: curso,
-                        inscritos: inscritos,
-                        mensajeError: mensajeError,
-                        mensajeExito: mensajeExito
+                    usuariosController.obtenerDocentes((docentes) => {
+                        res.render('administrarCurso', {
+                            curso: curso,
+                            inscritos: inscritos,
+                            mensajeError: mensajeError,
+                            mensajeExito: mensajeExito,
+                            docentes: docentes
+                        });
                     });
                 });
             });

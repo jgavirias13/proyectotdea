@@ -20,6 +20,12 @@
         Intensidad horaria:
         <small class="text-muted">{{curso.intensidad}}</small>
     </h5>
+    {{#if curso.docente}}
+        <h5>
+            Docente:
+            <small class="text-muted">{{curso.docente.nombre}}</small>
+        </h5>
+    {{/if}}
 
     <div class="row">
         <div class="col-sm-1">
