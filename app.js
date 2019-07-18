@@ -95,7 +95,9 @@ app.post('/', (req, res) => {
             req.session.usuario = usuario;
             if(usuario.rol == 'coordinador'){
                 res.redirect('/administrarCursos')
-            }else{
+            }else if(usuario.rol == 'docente'){
+                res.redirect('/listarCursos');
+            }else if(usuario.rol == 'aspirante'){
                 res.redirect('/listarCursos');
             }
         }else{
@@ -523,64 +525,6 @@ app.post('/editarUsuario', (req, res) => {
         res.redirect('/');
     }
 })
-
-app.get('/convertirAspirante', (req, res) => {
-    let usuario = req.session.usuario;
-    if(usuario && req.cookies.user_sid){
-        if(usuario.rol == 'coordinador'){
-            usuariosController.convertirAspirante(req.query.usuario, (resp) => {
-                usuariosController.listarUsuarios((listaUsuarios) => {
-                    if(resp == 0){
-                        let mensajeExito = crearExitoso('Rol cambiado con exito');
-                        res.render('administrarUsuarios', {
-                            mensajeExito: mensajeExito,
-                            usuarios: listaUsuarios
-                        });
-                    }else{
-                        let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
-                        res.render('administrarUsuarios', {
-                            mensajeError: mensajeError,
-                            usuarios: listaUsuarios
-                        });
-                    }
-                });
-            });
-        }else{
-            res.redirect('/listarCursos');
-        }
-    }else{
-        res.redirect('/');
-    }
-});
-
-app.get('/convertirCoordinador', (req, res) => {
-    let usuario = req.session.usuario;
-    if(usuario && req.cookies.user_sid){
-        if(usuario.rol == 'coordinador'){
-            usuariosController.convertirCoordinador(req.query.usuario, (resp) => {
-                usuariosController.listarUsuarios((listaUsuarios) => {
-                    if(resp == 0){
-                        let mensajeExito = crearExitoso('Rol cambiado con exito');
-                        res.render('administrarUsuarios', {
-                            mensajeExito: mensajeExito,
-                            usuarios: listaUsuarios
-                        });
-                    }else{
-                        let mensajeError = crearError('Ha ocurrido un error con tu solicitud');
-                        res.render('administrarUsuarios', {
-                            mensajeError: mensajeError,
-                            usuarios: listaUsuarios
-                        });
-                    }
-                });
-            });
-        }else{
-            res.redirect('/listarCursos');
-        }
-    }else{
-        res.redirect('/');
-    }
-});
 
 app.get('/eliminarUsuario', (req, res) => {
     let usuario = req.session.usuario;

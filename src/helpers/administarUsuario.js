@@ -1,9 +1,14 @@
 const hbs = require('hbs');
 
-hbs.registerHelper('accionRol', (usuario) => {
-    if(usuario.rol == 'coordinador'){
-        return `<a href="/convertirAspirante?usuario=${usuario.documento}">Cambiar a aspirante</a>`;
-    }else{
-        return `<a href="/convertirCoordinador?usuario=${usuario.documento}">Cambiar a coordinador</a>`;
-    }
+hbs.registerHelper('rolesUsuario', (usuario) => {
+    let roles = ['aspirante', 'coordinador', 'docente'];
+    let opciones = "";
+    roles.forEach((rol) => {
+        opciones += "<option";
+        if(usuario.rol == rol){
+            opciones += " selected";
+        }
+        opciones += ` value="${rol}">${rol}</option>`;
+    });
+    return opciones;
 });

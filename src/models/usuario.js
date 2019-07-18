@@ -24,7 +24,7 @@ const usuarioSchema = new Schema({
     rol: {
         type: String,
         required: true,
-        enum: ['aspirante', 'coordinador']
+        enum: ['aspirante', 'coordinador', 'docente']
     },
     password: {
         type: String,

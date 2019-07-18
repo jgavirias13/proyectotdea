@@ -54,26 +54,6 @@ const listarUsuarios = (callback) => {
     });
 }
 
-const convertirCoordinador = (idUsuario, callback) => {
-    Usuario.findOneAndUpdate({documento: idUsuario}, {rol: 'coordinador'}, {new: true}, (err, usuario) => {
-        if(err){
-            callback(1);
-        }else{
-            callback(0);
-        }
-    });
-}
-
-const convertirAspirante = (idUsuario, callback) => {
-    Usuario.findOneAndUpdate({documento: idUsuario}, {rol: 'aspirante'}, {new: true}, (err, usuario) => {
-        if(err){
-            callback(1);
-        }else{
-            callback(0);
-        }
-    });
-}
-
 const eliminarUsuario = (idUsuario, callback) => {
     Usuario.findOneAndDelete({documento: idUsuario}, (err, usuario) => {
         if(err){
@@ -85,11 +65,12 @@ const eliminarUsuario = (idUsuario, callback) => {
 }
 
 const actualizarUsuario = (datosUsuario, callback) => {
-    Usuario.findOneAndUpdate({documento: datosUsuario.documento}, {new: true}, {
+    Usuario.findOneAndUpdate({documento: datosUsuario.documento}, {
         nombre: datosUsuario.nombre,
         correo: datosUsuario.correo,
-        telefono: datosUsuario.telefono
-    }, (err, usuario) => {
+        telefono: datosUsuario.telefono,
+        rol: datosUsuario.rol
+    }, {new: true}, (err, usuario) => {
         if(err){
             callback(1);
         }else{
@@ -103,8 +84,6 @@ module.exports = {
     iniciarSesion,
     listarUsuario,
     listarUsuarios,
-    convertirAspirante,
-    convertirCoordinador,
     eliminarUsuario,
     actualizarUsuario
 };

@@ -31,6 +31,9 @@ const cursoSchema = new Schema({
         type: String,
         required: true,
         enum: ['disponible', 'cerrado']
+    },
+    docente: {
+        type: Schema.Types.ObjectId, ref: 'Usuario'
     }
 });
 cursoSchema.plugin(uniqueValidator);
