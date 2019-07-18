@@ -18,7 +18,7 @@ const directorioPublics = path.join(__dirname, '/public');
 const directorioModules = path.join(__dirname, '/node_modules');
 
 const port = process.env.PORT || 3000;
-const urlDB = "mongodb://localhost:27017/tdea";
+const urlDB = "mongodb+srv://jgavirias13:CtUVmt85NA17FlY7@virtualtdea-s9l0m.mongodb.net/tdea?retryWrites=true&w=majority";
 
 function crearError(mensaje){
     return `<div class="alert alert-danger" role="alert">${mensaje}</div>`;
