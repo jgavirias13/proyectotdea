@@ -1,0 +1,14 @@
+<script src="js/bootbox.min.js"></script>
+<script src="js/bootbox.locales.min.js"></script>
+<script>
+    $(document).on("click", ".show-alert", function(e) {
+        bootbox.prompt({
+           title: 'Seleccionar docente',
+           inputType: 'select',
+           inputOptions: {{{listarDocentes docentes}}},
+           callback: (result) => {
+               window.location.href = `/cerrarCurso?curso={{curso.id}}&docente=${result}`;
+           }
+        });
+    });
+</script>
