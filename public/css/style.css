@@ -5,3 +5,7 @@
 .mensaje:empty{
     display: none;
 }
+
+.card_space{
+    margin-top: 25px !important;
+}
