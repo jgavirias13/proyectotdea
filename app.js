@@ -10,6 +10,8 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
+process.env.SENDGRID_API_KEY = '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';
+
 HandlebarsIntl.registerWith(hbs);
 
 require('./src/helpers/administrarCurso');
