@@ -9,6 +9,7 @@ const inscripcionesController = require('./src/inscripcionesController');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const correosController = require('./src/correosController');
 
 process.env.SENDGRID_API_KEY = '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';
 
@@ -162,20 +163,44 @@ app.get('/listarCursos', (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
         cursosController.listarDisponibles((listaCursos) => {
-            if(usuario.rol == 'coordinador'){
-                res.render('listarCursos', {
-                    cursos: listaCursos
+            res.render('listarCursos', {
+                cursos: listaCursos
+            });
+        });
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.get('/contactanos', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        res.render('contactanos');
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.post('/contactanos', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        correosController.enviarCorreoContacto(usuario, req.body, (respuesta) => {
+            if(respuesta){
+                let mensajeExito = crearExitoso('Se ha enviado tu correo, en poco tiempo te contestaremos a tu correo');
+                res.render('contactanos', {
+                    mensajeExito: mensajeExito
                 });
             }else{
-                res.render('listarCursos', {
-                    cursos: listaCursos
+                let mensajeError = crearError('Ha ocurrido un error al enviar el mensaje. Intenta de nuevo mas tarde')
+                res.render('contactanos', {
+                    mensajeError: mensajeError
                 });
             }
         });
     }else{
         res.redirect('/');
     }
-});
+})
 
 app.get('/listarCursosDocente', (req, res) => {
     let usuario = req.session.usuario;
@@ -581,7 +606,7 @@ app.post('/editarUsuario', (req, res) => {
     }else{
         res.redirect('/');
     }
-})
+});
 
 app.get('/eliminarUsuario', (req, res) => {
     let usuario = req.session.usuario;
