@@ -99,7 +99,7 @@ app.post('/', (req, res) => {
             if(usuario.rol == 'coordinador'){
                 res.redirect('/administrarCursos')
             }else if(usuario.rol == 'docente'){
-                res.redirect('/listarCursos');
+                res.redirect('/listarCursosDocente');
             }else if(usuario.rol == 'aspirante'){
                 res.redirect('/listarCursos');
             }
@@ -177,6 +177,25 @@ app.get('/listarCursos', (req, res) => {
     }
 });
 
+app.get('/listarCursosDocente', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        cursosController.listarCursosDocente(usuario, (listaCursos) => {
+            if(usuario.rol == 'docente'){
+                res.render('listarCursosDocente', {
+                    cursos: listaCursos
+                });
+            }else{
+                res.render('listarCursos', {
+                    cursos: listaCursos
+                });
+            }
+        });
+    }else{
+        res.redirect('/');
+    }
+});
+
 app.get('/listarInscripciones', (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
@@ -240,6 +259,29 @@ app.get('/administrarCurso', (req, res) => {
                 inscripcionesController.listarInscritos(curso.id, (inscritos) => {
                     usuariosController.obtenerDocentes((docentes) => {
                         res.render('administrarCurso', {
+                            curso: curso,
+                            inscritos: inscritos,
+                            docentes: docentes
+                        });
+                    });
+                });
+            });
+        }else{
+            res.redirect('/listarCursos');
+        }
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.get('/listarCursoDocente', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        if(usuario.rol == 'docente'){
+            cursosController.listarCurso(req.query, (curso) => {
+                inscripcionesController.listarInscritos(curso.id, (inscritos) => {
+                    usuariosController.obtenerDocentes((docentes) => {
+                        res.render('listarCursoDocente', {
                             curso: curso,
                             inscritos: inscritos,
                             docentes: docentes

@@ -35,6 +35,12 @@ const listarDisponibles = (callback) => {
     })
 }
 
+const listarCursosDocente = (docente, callback) => {
+    Curso.find({docente: docente}).populate('docente').exec((err, cursos) => {
+        callback(cursos);
+    });
+}
+
 const listarCurso = (cursoDatos, callback) => {
     Curso.findOne({id: cursoDatos.id}).populate('docente').exec((err, curso) => {
         callback(curso);
@@ -74,6 +80,7 @@ module.exports = {
     listar,
     listarCurso,
     listarDisponibles,
+    listarCursosDocente,
     cerrarCurso,
     abrirCurso
 }

@@ -1,0 +1,25 @@
+{{>header}}
+
+<div class="container">
+    <h2>Cursos asignados</h2>
+</div>
+
+<div class="container">
+    {{{mensajeError}}}
+    {{{mensajeExito}}}
+    {{#each cursos}}
+        <div class="card card_space">
+            <div class="card-header">
+                {{this.id}}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><a href="listarCursoDocente?id={{this.id}}">{{this.nombre}}</a></h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{formatNumber this.valor style="currency" currency="USD"}}</h6>
+                <p class="card-text">{{this.descripcion}}</p>
+                <footer class="blockquote-footer">{{this.modalidad}}</footer>
+            </div>
+        </div>
+    {{/each}}
+</div>
+
+{{>footer}}

@@ -17,22 +17,30 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
-                {{#if aspirante}}
+                    {{#if aspirante}}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/listarCursos">Cursos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/listarInscripciones">Tus inscripciones</a>
+                        </li>
+                    {{/if}}
+                    {{#if coordinador}}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/administrarCursos">Administrar cursos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/administrarUsuarios">Administrar Usuarios</a>
+                        </li>
+                    {{/if}}
+                    {{#if docente}}
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/listarCursosDocente">Cursos</a>
+                        </li>
+                    {{/if}}
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="/listarCursos">Cursos</a>
+                        <a class="nav-link text-light" href="/contactanos">Contactanos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="/listarInscripciones">Tus inscripciones</a>
-                    </li>
-                {{/if}}
-                {{#if coordinador}}
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="/administrarCursos">Administrar cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="/administrarUsuarios">Administrar Usuarios</a>
-                    </li>
-                {{/if}}
                 </ul>
                 <span class="navbar-text ">
                     <a href="/logout" class="text-light">Cerrar sesion ({{nombre}})</a>

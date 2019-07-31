@@ -1,0 +1,72 @@
+{{>header}}
+
+<div class="container">
+    <div class="jumbotron">
+        <h2 class="display-4">{{curso.nombre}}</h1>
+    </div>
+
+    {{{mensajeExito}}}
+    {{{mensajeError}}}
+
+    <h2>{{curso.id}}</h2>
+    <p>
+        {{curso.descripcion}}
+    </p>
+    <p>
+        <h5>
+            Valor:
+            <small class="text-muted">{{formatNumber curso.valor style="currency" currency="USD"}}</small>
+        </h5>
+        <h5>
+            Modalidad:
+            <small class="text-muted">{{curso.modalidad}}</small>
+        </h5>
+        <h5>
+            Intensidad horaria:
+            <small class="text-muted">{{curso.intensidad}}</small>
+        </h5>
+        <h5>
+            Estado:
+            <small class="text-muted">{{curso.estado}}</small>
+        </h5>
+        {{#if curso.docente}}
+            <h5>
+                Docente:
+                <small class="text-muted">{{curso.docente.nombre}}</small>
+            </h5>
+        {{/if}}
+    </p>
+    
+    <h2>
+        Inscritos
+    </h2>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Documento</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Telefono</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each inscritos}}
+                <tr>
+                    <th scope="row">{{this.documento}}</th>
+                    <td>{{this.nombre}}</td>
+                    <td>{{this.correo}}</td>
+                    <td>{{this.telefono}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-sm-2">
+            <a href="/listarCursosDocente" class="btn btn-info">Volver</a>
+        </div>
+    </div>
+</div>
+
+{{>footer}}
