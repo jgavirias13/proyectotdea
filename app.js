@@ -10,8 +10,18 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const correosController = require('./src/correosController');
+const multer = require('multer');
 
-process.env.SENDGRID_API_KEY = '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';
+var storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, 'public/uploads/')
+    },
+    filename: function(req, file, cb){
+        cb(null, file.fieldname+'-'+Date.now()+path.extname(file.originalname))
+    }
+});
+
+var upload = multer({ storage: storage });
 
 HandlebarsIntl.registerWith(hbs);
 
@@ -181,6 +191,19 @@ app.get('/contactanos', (req, res) => {
     }
 });
 
+app.get('/contactarDocente', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        usuariosController.listarUsuario(req.query.docente, (docente) => {
+            res.render('contactarDocente', {
+                docente: docente
+            });
+        });
+    }else{
+        res.redirect('/');
+    }
+});
+
 app.post('/contactanos', (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
@@ -200,7 +223,33 @@ app.post('/contactanos', (req, res) => {
     }else{
         res.redirect('/');
     }
-})
+});
+
+app.post('/contactarDocente', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        correosController.enviarCorreoContacto(usuario, req.body, (respuesta) => {
+            let docente = {
+                correo: req.body.para
+            };
+            if(respuesta){
+                let mensajeExito = crearExitoso('Se ha enviado tu correo, en poco tiempo te contestaremos a tu correo');
+                res.render('contactarDocente', {
+                    mensajeExito: mensajeExito,
+                    docente: docente
+                });
+            }else{
+                let mensajeError = crearError('Ha ocurrido un error al enviar el mensaje. Intenta de nuevo mas tarde')
+                res.render('contactarDocente', {
+                    mensajeError: mensajeError,
+                    docente: docente
+                });
+            }
+        });
+    }else{
+        res.redirect('/');
+    }
+});
 
 app.get('/listarCursosDocente', (req, res) => {
     let usuario = req.session.usuario;
@@ -392,10 +441,11 @@ app.get('/abrirCurso', (req, res) => {
     }
 });
 
-app.post('/crearCurso', (req, res) => {
+app.post('/crearCurso', upload.single('planCurso'), (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
         if(usuario.rol == 'coordinador'){
+            req.body.planCurso = req.file;
             cursosController.crear(req.body, (retorno) => {
                 let mensajeError;
                 let mensajeExito;

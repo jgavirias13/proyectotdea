@@ -23,7 +23,7 @@
     {{#if curso.docente}}
         <h5>
             Docente:
-            <small class="text-muted">{{curso.docente.nombre}}</small>
+            <small class="text-muted"> <a href="/contactarDocente?docente={{curso.docente.documento}}">{{curso.docente.nombre}}</a></small>
         </h5>
     {{/if}}
 

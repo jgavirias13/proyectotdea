@@ -6,7 +6,7 @@
     {{{mensajeError}}}
     {{{mensajeExito}}}
 
-    <form action="/crearCurso" method="POST">
+    <form action="/crearCurso" method="POST" enctype="multipart/form-data">
         <div class="form-group row">
             <label for="nombreCurso" class="col-sm-2 col-form-label">Nombre</label>
             <div class="col-sm-10">
@@ -53,12 +53,17 @@
                     placeholder="Ingresa la intensidad horaria" value="{{intensidadCurso}}">
             </div>
         </div>
+        <div class="form-group row">
+            <label for="planCurso" class="col-sm-2 col-form-label">Plan de curso</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control" id="planCurso" name="planCurso">
+            </div>
+        </div>
         <div class="form-group row ">
             <div class="col-sm-6">
                 <a href="/administrarCursos" class="btn btn-secondary">Volver</a>
                 <button class="btn btn-primary">Crear curso</button>
             </div>
-            
         </div>
     </form>
 </div>

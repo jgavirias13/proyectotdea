@@ -34,6 +34,9 @@ const cursoSchema = new Schema({
     },
     docente: {
         type: Schema.Types.ObjectId, ref: 'Usuario'
+    },
+    planEstudio: {
+        type: String
     }
 });
 cursoSchema.plugin(uniqueValidator);

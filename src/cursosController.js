@@ -14,6 +14,10 @@ const crear = (cursoBody, callback) => {
         estado: 'disponible'
     });
 
+    if(cursoBody.planCurso){
+        curso.planEstudio = cursoBody.planCurso.path
+    }
+
     curso.save((err, curso) => {
         if(err){
             callback(1);
