@@ -27,6 +27,13 @@
         </h5>
     {{/if}}
 
+    {{#if curso.planEstudio}}
+        <h5>
+            Plan de estudio:
+            <small class="text-muted"> <a href="/{{curso.planEstudio}}">Descargar</a></small>
+        </h5>
+    {{/if}}
+
     <div class="row">
         <div class="col-sm-1">
             <a href="/listarCursos" class="btn btn-info">Volver</a>

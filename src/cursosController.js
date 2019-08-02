@@ -15,7 +15,7 @@ const crear = (cursoBody, callback) => {
     });
 
     if(cursoBody.planCurso){
-        curso.planEstudio = cursoBody.planCurso.path
+        curso.planEstudio = 'uploads/'+cursoBody.planCurso.filename
     }
 
     curso.save((err, curso) => {
