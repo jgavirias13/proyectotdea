@@ -35,6 +35,12 @@
                 <small class="text-muted">{{curso.docente.nombre}}</small>
             </h5>
         {{/if}}
+        {{#if curso.planEstudio}}
+            <h5>
+                Plan de estudio:
+                <small class="text-muted"> <a href="/{{curso.planEstudio}}">Descargar</a></small>
+            </h5>
+        {{/if}}
     </p>
     
     <h2>
