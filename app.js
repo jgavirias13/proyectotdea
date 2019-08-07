@@ -11,6 +11,9 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const correosController = require('./src/correosController');
 const multer = require('multer');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -21,14 +24,18 @@ var storage = multer.diskStorage({
     }
 });
 
-var upload = multer({ storage: storage });
+var upload = multer({
+    storage: storage,
+    limits:{
+        fileSize: 10000000
+    }
+});
 
 HandlebarsIntl.registerWith(hbs);
 
 require('./src/helpers/administrarCurso');
 require('./src/helpers/administarUsuario');
 
-const app = express();
 const directorioPartials = path.join(__dirname, '/views/partials');
 const directorioPublics = path.join(__dirname, '/public');
 const directorioModules = path.join(__dirname, '/node_modules');
@@ -695,6 +702,6 @@ mongoose.connect(urlDB, {useNewUrlParser: true}, (err, res) => {
     return console.log(`Conectado a ${urlDB}`);
 });
 
-app.listen(port, () =>{
+server.listen(port, () =>{
     console.log(`Escuchando en el puerto ${port}`);
 });
