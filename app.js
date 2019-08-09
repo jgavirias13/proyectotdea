@@ -14,6 +14,8 @@ const multer = require('multer');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const chatController = require('./src/chatController');
+const sharedsession = require('express-socket.io-session');
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -51,11 +53,7 @@ function crearExitoso(mensaje){
     return `<div class="alert alert-success" role="alert">${mensaje}</div>`;
 }
 
-hbs.registerPartials(directorioPartials);
-app.use(express.static(directorioPublics));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
-app.use(session({
+let sessionShared = session({
     key: 'user_sid',
     secret: 'random',
     resave: false,
@@ -63,7 +61,17 @@ app.use(session({
     cookie:{
         expires: 600000
     }
+});
+
+hbs.registerPartials(directorioPartials);
+app.use(express.static(directorioPublics));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
+app.use(sessionShared);
+io.use(sharedsession(sessionShared, {
+    autoSave:true
 }));
+
 app.use((req, res, next) => {
     if(req.cookies.user_sid && !req.session.usuario){
         res.clearCookie('user_sid');
@@ -184,6 +192,15 @@ app.get('/listarCursos', (req, res) => {
                 cursos: listaCursos
             });
         });
+    }else{
+        res.redirect('/');
+    }
+});
+
+app.get('/soporte', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        res.render('soporte');
     }else{
         res.redirect('/');
     }
@@ -692,6 +709,32 @@ app.get('/eliminarUsuario', (req, res) => {
     }else{
         res.redirect('/');
     }
+});
+
+const chatio = io.of('/soporte');
+chatio.use(sharedsession(sessionShared, {
+    autoSave:true
+}));
+chatio.on('connection', client => {
+
+    client.on('usuarioNuevo', () => {
+        let email = client.handshake.session.usuario.correo;
+        let id = client.id;
+        let restantes = chatController.agregarTurno(id, email);
+        client.emit('cambiarRestantes', restantes);
+    });
+
+    client.on('actualizarRestantes', () => {
+        let id = client.id;
+        let restantes = chatController.obtenerRestantes(id);
+        client.emit('cambiarRestantes', restantes);
+    });
+
+    client.on('disconnect', () => {
+        let id = client.id;
+        chatController.eliminarTurno(id);
+        chatio.emit('actualizarRestantes');
+    });
 });
 
 mongoose.connect(urlDB, {useNewUrlParser: true}, (err, res) => {
