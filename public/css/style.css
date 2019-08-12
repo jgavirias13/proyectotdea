@@ -1,11 +1,59 @@
-.mensaje{
+.mensaje {
     display: block;
 }
 
-.mensaje:empty{
+.mensaje:empty {
     display: none;
 }
 
-.card_space{
+.card_space {
     margin-top: 25px !important;
+}
+
+/* Chat msg_containers */
+
+.msg_container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+/* Darker chat msg_container */
+
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+
+/* Clear floats */
+
+.msg_container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Style time text */
+
+.time-right {
+    float: right;
+    color: #aaa;
+}
+
+/* Style time text */
+
+.time-left {
+    float: left;
+    color: #999;
+}
+
+.chat_container{
+    display: none;
+}
+
+.msgs_container{
+    height: 300px;
+    overflow: auto;
 }

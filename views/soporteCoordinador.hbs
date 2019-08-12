@@ -1,0 +1,21 @@
+{{>header}}
+
+<div class="container text-center">
+    <h2>Chat de soporte</h2>
+    <div id="infoSoporte" class="container text-center">
+        <div class="card text-center" style="width: 18rem">
+            <div class="card-body">
+                <h3 class="card-title" id="restantes">{{restantes}}</h3>
+                <p class="card-text">Personas por ser atendidas</p>
+                <button class="btn btn-primary" id="btnSiguiente">Atender siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <p id="chatElement"></p>
+</div>
+
+{{>chat}}
+
+<script src="js/chatCoordinador.js"></script>

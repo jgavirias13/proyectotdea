@@ -15,6 +15,15 @@ class Turnos{
         return this.turnos.findIndex(turno => turno.id == idUsuario);
     }
 
+    obtenerTotalRestantes(){
+        return this.turnos.length;
+    }
+
+    siguienteTurno(){
+        let turnoUsuario = this.turnos.shift();
+        return turnoUsuario;
+    }
+
 }
 
 module.exports = {

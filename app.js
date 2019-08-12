@@ -206,6 +206,18 @@ app.get('/soporte', (req, res) => {
     }
 });
 
+app.get('/soporteCoordinador', (req, res) => {
+    let usuario = req.session.usuario;
+    if(usuario && req.cookies.user_sid){
+        let restantes = chatController.obtenerTotalRestantes();
+        res.render('soporteCoordinador', {
+            restantes: restantes
+        });
+    }else{
+        res.redirect('/');
+    }
+});
+
 app.get('/contactanos', (req, res) => {
     let usuario = req.session.usuario;
     if(usuario && req.cookies.user_sid){
@@ -719,9 +731,13 @@ chatio.on('connection', client => {
 
     client.on('usuarioNuevo', () => {
         let email = client.handshake.session.usuario.correo;
+        let nombre = client.handshake.session.usuario.nombre;
         let id = client.id;
-        let restantes = chatController.agregarTurno(id, email);
+        let restantes = chatController.agregarTurno(id, email, nombre);
         client.emit('cambiarRestantes', restantes);
+
+        let totalRestantes = chatController.obtenerTotalRestantes();
+        chatio.emit('actualizarTotalRestantes', totalRestantes);
     });
 
     client.on('actualizarRestantes', () => {
@@ -734,6 +750,31 @@ chatio.on('connection', client => {
         let id = client.id;
         chatController.eliminarTurno(id);
         chatio.emit('actualizarRestantes');
+
+        let totalRestantes = chatController.obtenerTotalRestantes();
+        chatio.emit('actualizarTotalRestantes', totalRestantes);
+    });
+
+    client.on('siguienteTurno', () => {
+        let idCoordinador = client.id;
+        let correoCoordinador = client.handshake.session.usuario.correo;
+        let nombreCoordinador = client.handshake.session.usuario.nombre;
+        let salaAsignada = chatController.siguienteTurno(idCoordinador, nombreCoordinador, correoCoordinador);
+        client.broadcast.to(salaAsignada.getUsuario().id).emit('irASala', salaAsignada);
+        client.emit('irASala', salaAsignada);
+
+        //Actualizar restantes en todos los clientes
+        let totalRestantes = chatController.obtenerTotalRestantes();
+        chatio.emit('actualizarTotalRestantes', totalRestantes);
+        chatio.emit('actualizarRestantes');
+    });
+
+    client.on('enviarMensaje', (contenido, sala) => {
+        console.log(sala);
+        let mensaje = chatController.enviarMensaje(contenido, client.id, sala);
+        client.emit('recibirMensaje', mensaje);
+        client.broadcast.to(sala.usuario.id).emit('recibirMensaje', mensaje);
+        client.broadcast.to(sala.coordinador.id).emit('recibirMensaje', mensaje);
     });
 });
 

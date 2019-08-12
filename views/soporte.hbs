@@ -1,13 +1,18 @@
 {{>header}}
 
 <div class="container">
-    <h2>Chat de soporte</h2>
-    <div class="container">
+    <h2 class="text-center">Chat de soporte</h2>
+    <div class="container" id="infoSoporte">
         <p>En este chat podrás contactar con los coordinadores conectados en la página para resolver tus dudas</p>
         <div class="alert alert-info" role="alert">
             <strong id="restantes"></strong> personas para que seas atendido
         </div>
     </div>
+    <div class="container">
+        <p id="chatElement"></p>
+    </div>
 </div>
+
+{{>chat}}
 
 <script src="js/chat.js"></script>
