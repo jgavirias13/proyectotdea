@@ -8,7 +8,12 @@ class Turnos{
     }
 
     eliminarTurno(idUsuario){
-        this.turnos = this.turnos.filter(turno => turno.id != idUsuario);
+        if(this.turnos.find(turno => turno.id == idUsuario)){
+            this.turnos = this.turnos.filter(turno => turno.id != idUsuario);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     obtenerRestantes(idUsuario){

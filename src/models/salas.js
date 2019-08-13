@@ -14,6 +14,10 @@ class Salas{
     obtenerSala(idSala){
         return this.salas.find(sala => sala.id == idSala);
     }
+
+    obtenerSalaUsuario(idUsuario){
+        return this.salas.find(sala => sala.usuario.id == idUsuario || sala.coordinador.id == idUsuario);
+    }
 }
 
 module.exports = {

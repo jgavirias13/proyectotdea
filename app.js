@@ -748,11 +748,18 @@ chatio.on('connection', client => {
 
     client.on('disconnect', () => {
         let id = client.id;
-        chatController.eliminarTurno(id);
-        chatio.emit('actualizarRestantes');
+        if(chatController.eliminarTurno(id)){
+            chatio.emit('actualizarRestantes');
 
-        let totalRestantes = chatController.obtenerTotalRestantes();
-        chatio.emit('actualizarTotalRestantes', totalRestantes);
+            let totalRestantes = chatController.obtenerTotalRestantes();
+            chatio.emit('actualizarTotalRestantes', totalRestantes);
+        }else{
+            let sala = chatController.obtenerSalaUsuario(id);
+            if(sala){
+                client.broadcast.to(sala.usuario.id).emit('terminarChat');
+                client.broadcast.to(sala.coordinador.id).emit('terminarChat');
+            }
+        }
     });
 
     client.on('siguienteTurno', () => {
@@ -770,12 +777,16 @@ chatio.on('connection', client => {
     });
 
     client.on('enviarMensaje', (contenido, sala) => {
-        console.log(sala);
         let mensaje = chatController.enviarMensaje(contenido, client.id, sala);
         client.emit('recibirMensaje', mensaje);
         client.broadcast.to(sala.usuario.id).emit('recibirMensaje', mensaje);
         client.broadcast.to(sala.coordinador.id).emit('recibirMensaje', mensaje);
     });
+
+    client.on('terminarChat', (sala) => {
+        client.broadcast.to(sala.usuario.id).emit('terminarChat');
+        client.broadcast.to(sala.coordinador.id).emit('terminarChat');
+    })
 });
 
 mongoose.connect(urlDB, {useNewUrlParser: true}, (err, res) => {

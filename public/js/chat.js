@@ -4,11 +4,25 @@ const chatElement = document.querySelector('#chatElement');
 const infoSoporte = document.getElementById('infoSoporte');
 const chatContainer = document.getElementById('chatContainer');
 const mensajes = document.getElementById('mensajes');
+const btnTerminar = document.getElementById('btnTerminar');
+const msgFinChat = document.getElementById('msg_fin_chat');
 
 let numRestantes = 0;
 let salaAsignada;
 
 chatSocket.emit('usuarioNuevo');
+
+btnTerminar.onclick = () => {
+    chatSocket.emit('terminarChat', salaAsignada);
+    chatContainer.style.display = 'none';
+    msgFinChat.style.display = 'block';
+};
+
+chatSocket.on('terminarChat', () => {
+    chatContainer.style.display = 'none';
+    msgFinChat.style.display = 'block';
+});
+
 chatSocket.on('cambiarRestantes', (restantes) => {
     numRestantes = parseInt(restantes);
     restantesElement.innerHTML = numRestantes;
@@ -27,7 +41,6 @@ chatSocket.on('actualizarRestantes', () => {
 });
 
 chatSocket.on('recibirMensaje', (mensaje) => {
-    console.log(mensaje);
     let mensajeHtml = '<div class="msg_container';
     if(mensaje.emisor == salaAsignada.coordinador.id){
         mensajeHtml += ' darker">';

@@ -52,7 +52,6 @@ const listarCurso = (cursoDatos, callback) => {
 }
 
 const cerrarCurso = (idCurso, idDocente, callback) => {
-    console.log(idDocente);
     Usuario.findById(idDocente, (err, doc) => {
         if(err){
             return callback(false);

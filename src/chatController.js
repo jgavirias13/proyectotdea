@@ -13,7 +13,7 @@ const agregarTurno = (id, email, nombre) => {
 }
 
 const eliminarTurno = (id) => {
-    turnos.eliminarTurno(id);
+    return turnos.eliminarTurno(id);
 }
 
 const obtenerRestantes = (id) => {
@@ -39,11 +39,16 @@ const enviarMensaje = (contenidoMensaje, idCliente, sala) => {
     return mensaje;
 }
 
+const obtenerSalaUsuario = (idUsuario) => {
+    return salas.obtenerSalaUsuario(idUsuario);
+}
+
 module.exports = {
     agregarTurno,
     eliminarTurno,
     obtenerRestantes,
     obtenerTotalRestantes,
     siguienteTurno,
-    enviarMensaje
+    enviarMensaje,
+    obtenerSalaUsuario
 }

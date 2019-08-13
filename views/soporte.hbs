@@ -2,14 +2,16 @@
 
 <div class="container">
     <h2 class="text-center">Chat de soporte</h2>
+
+    <div class="alert alert-success" id="msg_fin_chat" role="alert" style="display: none">
+        El chat ha sido finalizado. Una copia de este será enviada a su correo
+    </div>
+
     <div class="container" id="infoSoporte">
         <p>En este chat podrás contactar con los coordinadores conectados en la página para resolver tus dudas</p>
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info" role="alert" id="msg_restantes">
             <strong id="restantes"></strong> personas para que seas atendido
         </div>
-    </div>
-    <div class="container">
-        <p id="chatElement"></p>
     </div>
 </div>
 

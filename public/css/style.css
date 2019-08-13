@@ -57,3 +57,7 @@
     height: 300px;
     overflow: auto;
 }
+
+.btn_terminar{
+    margin-top: 20px;
+}

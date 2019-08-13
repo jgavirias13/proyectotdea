@@ -2,6 +2,11 @@
 
 <div class="container text-center">
     <h2>Chat de soporte</h2>
+
+    <div class="alert alert-success" id="msg_fin_chat" role="alert" style="display: none">
+        El chat ha sido finalizado. Una copia de este será enviada a su correo
+    </div>
+
     <div id="infoSoporte" class="container text-center">
         <div class="card text-center" style="width: 18rem">
             <div class="card-body">
@@ -11,9 +16,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="container">
-    <p id="chatElement"></p>
 </div>
 
 {{>chat}}
