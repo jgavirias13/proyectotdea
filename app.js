@@ -758,6 +758,8 @@ chatio.on('connection', client => {
             if(sala){
                 client.broadcast.to(sala.usuario.id).emit('terminarChat');
                 client.broadcast.to(sala.coordinador.id).emit('terminarChat');
+                correosController.enviarConversacion(sala.usuario, sala.mensajes);
+                correosController.enviarConversacion(sala.coordinador, sala.mensajes);
             }
         }
     });
@@ -786,6 +788,7 @@ chatio.on('connection', client => {
     client.on('terminarChat', (sala) => {
         client.broadcast.to(sala.usuario.id).emit('terminarChat');
         client.broadcast.to(sala.coordinador.id).emit('terminarChat');
+        chatController.enviarConversacion(sala);
     })
 });
 

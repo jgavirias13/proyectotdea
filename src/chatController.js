@@ -1,3 +1,4 @@
+const correosController = require('./correosController');
 const { Turnos } = require('./models/turno');
 const { Sala } = require('./models/sala');
 const { ChatUser } = require('./models/chatUser');
@@ -33,7 +34,13 @@ const siguienteTurno = (idCoordinador, nombre, email) => {
 }
 
 const enviarMensaje = (contenidoMensaje, idCliente, sala) => {
-    let mensaje = new Mensaje(idCliente, contenidoMensaje);
+    let usuario;
+    if(idCliente == sala.usuario.id){
+        usuario = sala.usuario;
+    }else{
+        usuario = sala.coordinador;
+    }
+    let mensaje = new Mensaje(usuario, contenidoMensaje);
     let salaLista = salas.obtenerSala(sala.id);
     salaLista.agregarMensaje(mensaje);
     return mensaje;
@@ -43,6 +50,16 @@ const obtenerSalaUsuario = (idUsuario) => {
     return salas.obtenerSalaUsuario(idUsuario);
 }
 
+const enviarConversacion = (sala) => {
+    let salaLista = salas.obtenerSala(sala.id);
+    let usuario = sala.usuario;
+    let coordinador = sala.coordinador;
+    let mensajes = salaLista.mensajes;
+
+    correosController.enviarConversacion(usuario, mensajes);
+    correosController.enviarConversacion(coordinador, mensajes);
+}
+
 module.exports = {
     agregarTurno,
     eliminarTurno,
@@ -50,5 +67,6 @@ module.exports = {
     obtenerTotalRestantes,
     siguienteTurno,
     enviarMensaje,
-    obtenerSalaUsuario
+    obtenerSalaUsuario,
+    enviarConversacion
 }

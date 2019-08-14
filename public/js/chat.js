@@ -42,7 +42,7 @@ chatSocket.on('actualizarRestantes', () => {
 
 chatSocket.on('recibirMensaje', (mensaje) => {
     let mensajeHtml = '<div class="msg_container';
-    if(mensaje.emisor == salaAsignada.coordinador.id){
+    if(mensaje.emisor.id == salaAsignada.coordinador.id){
         mensajeHtml += ' darker">';
         mensajeHtml += `<p><strong>${salaAsignada.coordinador.nombre}: </strong>`
     }else{
